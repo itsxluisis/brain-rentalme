@@ -18,7 +18,7 @@ _limiter = Limiter(key_func=get_remote_address)
 COOKIE_KWARGS = {
     "key": COOKIE_NAME,
     "httponly": True,
-    "samesite": "lax",
+    "samesite": "none" if settings.APP_ENV == "production" else "lax",
     "secure": settings.APP_ENV == "production",
     "max_age": settings.JWT_EXPIRY_HOURS * 3600,
 }
