@@ -8,6 +8,7 @@ RUN npm install --legacy-peer-deps
 COPY frontend/ .
 
 ENV NEXT_PUBLIC_API_URL=https://rentalme-backend.sklshk.easypanel.host
+ENV NEXT_PUBLIC_BACKEND_URL=https://rentalme-backend.sklshk.easypanel.host
 
 RUN npm run build
 
