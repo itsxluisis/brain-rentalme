@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.knowledge.models import KnowledgeBlock
 from app.properties.models import Property
 from app.systems.models import System
+from app.shared.config import settings
 from app.shared.embeddings import embed_text
 
 
@@ -53,6 +54,13 @@ async def semantic_search(
 
     results = []
     for row in rows:
+        score = float(row.score)
+        # Drop irrelevant matches below the minimum similarity threshold instead
+        # of forcing top-K filler into the context (avoids feeding the LLM
+        # unrelated blocks just because they were the "least bad" match).
+        if score < settings.RAG_MIN_SIMILARITY:
+            continue
+
         entity_name = None
         if row.entity_type == "property":
             prop = await db.get(Property, row.entity_id)
@@ -61,6 +69,7 @@ async def semantic_search(
             sys = await db.get(System, row.entity_id)
             entity_name = sys.name if sys else None
 
+        content = row.content or ""
         results.append({
             "block_id": str(row.id),
             "entity_type": row.entity_type,
@@ -68,8 +77,8 @@ async def semantic_search(
             "entity_name": entity_name,
             "block_type": row.block_type,
             "title": row.title,
-            "content_preview": row.content[:300] if row.content else "",
-            "score": round(float(row.score), 4),
+            "content_preview": content[: settings.RAG_MAX_CONTEXT_CHARS],
+            "score": round(score, 4),
         })
 
     return results

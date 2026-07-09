@@ -34,6 +34,7 @@
 | UJ-20 | UJ | Reservas (Read-Only) | M5 | completed | yes | no | Guesty live + 5min cache |
 | UJ-21 | UJ | Pulido UI | M5 | completed | yes | no | Sidebar updated, nav complete |
 | UJ-22 | UJ | Script de Datos Demo | M5 | completed | yes | no | 5 props + 4 systems + 15+ blocks |
+| FIX-01 | Fix | RAG: truncation a 300 chars + sin umbral de relevancia | Post-M5 | completed | yes | no | Ver work_log 2026-07-08. Tests no ejecutables (entorno Python roto, no relacionado) |
 
 ## Milestones
 

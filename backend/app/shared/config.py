@@ -16,6 +16,17 @@ class Settings(BaseSettings):
     CORS_ORIGIN: str = "http://localhost:3000"
     APP_ENV: str = "development"
 
+    # RAG retrieval tuning
+    # Max characters of a knowledge block's content forwarded into the LLM context.
+    # Blocks longer than this are truncated (not the whole pipeline like before,
+    # just a high ceiling to avoid blowing up the prompt/context window).
+    RAG_MAX_CONTEXT_CHARS: int = 2500
+    # Minimum cosine similarity score (0-1) a result must have to be considered
+    # relevant. Results below this threshold are dropped entirely so the
+    # anti-hallucination prompt can correctly say "not in context" instead of
+    # being fed irrelevant top-K filler.
+    RAG_MIN_SIMILARITY: float = 0.35
+
     model_config = {"env_file": ".env", "extra": "ignore"}
 
     def validate_production_secrets(self) -> None:
